@@ -6,9 +6,17 @@ import { ContactsList } from './ContactsList/ContactsList';
 import { Filter } from './Filter/Filter';
 
 export const App = () => {
-  const [contacts, setContacts] = useState(
-    JSON.parse(localStorage.getItem('contacts'))
-  );
+  const [contacts, setContacts] = useState(() => {
+    return (
+      JSON.parse(localStorage.getItem('contacts')) ?? [
+        { id: nanoid(), name: 'Jimmy', number: '657483' },
+        { id: nanoid(), name: 'Henry', number: '067543' },
+        { id: nanoid(), name: 'Ruth', number: '846251' },
+        { id: nanoid(), name: 'Cyndy', number: '998877' },
+      ]
+    );
+  });
+
   const [filter, setFilter] = useState('');
 
   const formSubmitHandler = contactInfo => {
