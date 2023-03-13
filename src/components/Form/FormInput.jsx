@@ -25,14 +25,11 @@ export const FormInput = ({ onFormSubmit }) => {
   const onSubmit = event => {
     event.preventDefault();
 
-    onFormSubmit({ name, number });
-
-    onResettingForm();
-  };
-
-  const onResettingForm = () => {
-    setName('');
-    setNumber('');
+    const isSuccess = onFormSubmit({ name, number });
+    if (isSuccess) {
+      setName('');
+      setNumber('');
+    }
   };
 
   return (

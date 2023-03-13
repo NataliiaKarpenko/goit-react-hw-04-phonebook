@@ -7,17 +7,14 @@ import { Filter } from './Filter/Filter';
 
 export const App = () => {
   const [contacts, setContacts] = useState(() => {
-    return (
-      JSON.parse(localStorage.getItem('contacts')) ?? [
-        { id: nanoid(), name: 'Jimmy', number: '657483' },
-        { id: nanoid(), name: 'Henry', number: '067543' },
-        { id: nanoid(), name: 'Ruth', number: '846251' },
-        { id: nanoid(), name: 'Cyndy', number: '998877' },
-      ]
-    );
+    return JSON.parse(localStorage.getItem('contacts')) ?? [];
   });
 
   const [filter, setFilter] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
   const formSubmitHandler = contactInfo => {
     if (contacts.some(({ name }) => name === contactInfo.name)) {
@@ -30,15 +27,18 @@ export const App = () => {
       ...contactInfo,
     };
 
-    setContacts(prevContacts => [...prevContacts, finalContact]);
+    setContacts(prevContacts => [finalContact, ...prevContacts]);
+    return true;
   };
 
   const contactDeleteHandler = contactId => {
-    setContacts(contacts.filter(contact => contact.id !== contactId));
+    setContacts(prevContacts =>
+      prevContacts.filter(contact => contact.id !== contactId)
+    );
   };
 
   const contactFilterHandler = event => {
-    setFilter(event.currentTarget.value);
+    setFilter(event.target.value);
   };
 
   const getFilteredContacts = () => {
@@ -47,10 +47,6 @@ export const App = () => {
       name.toLowerCase().includes(normalizedFilter)
     );
   };
-
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
 
   return (
     <>
